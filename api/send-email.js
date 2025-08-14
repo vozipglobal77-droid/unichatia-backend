@@ -2,21 +2,22 @@
 const nodemailer = require('nodemailer');
 
 export default async function handler(req, res) {
-    // Solo acepta POST
+    // *** HEADERS CORS PRIMERO - ANTES DE CUALQUIER VALIDACIÓN ***
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    // Manejar preflight OPTIONS
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
+
+    // LUEGO validar que sea POST
     if (req.method !== 'POST') {
         return res.status(405).json({ 
             success: false, 
             error: 'Method not allowed' 
         });
-    }
-
-    // Headers CORS
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-    if (req.method === 'OPTIONS') {
-        return res.status(200).end();
     }
 
     try {
@@ -37,29 +38,18 @@ export default async function handler(req, res) {
             });
         }
 
-        // Configurar transporter para Mailhostbox (Testing alternativo)
-        const transporter = nodemailer.createTransport({
-            host: process.env.SMTP_HOST || 'smtp.mailhostbox.com', // Host Mailhostbox
-            port: parseInt(process.env.SMTP_PORT) || 587, // Puerto estándar
+        // Configurar transporter para Mailhostbox
+        const transporter = nodemailer.createTransporter({
+            host: process.env.SMTP_HOST || 'smtp.mailhostbox.com',
+            port: parseInt(process.env.SMTP_PORT) || 587,
             secure: false, // false para 587, true para 465
             auth: {
-                user: process.env.SMTP_USER, // Tu email de Mailhostbox
-                pass: process.env.SMTP_PASS  // Tu contraseña de Mailhostbox
+                user: process.env.SMTP_USER,
+                pass: process.env.SMTP_PASS
             },
             tls: {
                 rejectUnauthorized: false
-            },
-            debug: true, // Para logs detallados
-            logger: true
-        });
-
-        // Log para debugging (QUITAR EN PRODUCCIÓN)
-        console.log('🔍 SMTP Debug Info:', {
-            host: process.env.SMTP_HOST || 'smtp.mailhostbox.com',
-            port: process.env.SMTP_PORT || '587',
-            hasUser: !!process.env.SMTP_USER,
-            hasPass: !!process.env.SMTP_PASS,
-            userEmail: process.env.SMTP_USER // Solo para debug
+            }
         });
 
         // Verificar conexión SMTP

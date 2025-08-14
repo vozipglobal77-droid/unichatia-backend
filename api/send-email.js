@@ -37,19 +37,19 @@ export default async function handler(req, res) {
             });
         }
 
-        // Configurar transporter Nodemailer para Titan Email
+        // Configurar transporter Nodemailer para Titan Email (Configuración Oficial)
         const transporter = nodemailer.createTransport({
             host: 'smtp0101.titan.email',
-            port: 587, // Puerto 587 con STARTTLS (más compatible)
-            secure: false, // false para puerto 587
+            port: 465,
+            secure: true, // true para puerto 465 SSL/TLS
             auth: {
                 user: process.env.SMTP_USER, // Tu dirección completa de Titan
                 pass: process.env.SMTP_PASS  // Tu contraseña de Titan
             },
-            tls: {
-                ciphers: 'SSLv3',
-                rejectUnauthorized: false
-            },
+            // Configuración específica para Titan
+            connectionTimeout: 60000, // 60 segundos
+            greetingTimeout: 30000,   // 30 segundos
+            socketTimeout: 60000,     // 60 segundos
             debug: true, // Para logs detallados
             logger: true
         });

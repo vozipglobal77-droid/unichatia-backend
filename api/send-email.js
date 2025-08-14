@@ -40,15 +40,25 @@ export default async function handler(req, res) {
         // Configurar transporter Nodemailer para Titan Email
         const transporter = nodemailer.createTransport({
             host: 'smtp0101.titan.email',
-            port: 465,
-            secure: true, // SSL/TLS
+            port: 587, // Puerto 587 con STARTTLS (más compatible)
+            secure: false, // false para puerto 587
             auth: {
                 user: process.env.SMTP_USER, // Tu dirección completa de Titan
                 pass: process.env.SMTP_PASS  // Tu contraseña de Titan
             },
             tls: {
-                rejectUnauthorized: false // Para algunos proveedores puede ser necesario
-            }
+                ciphers: 'SSLv3',
+                rejectUnauthorized: false
+            },
+            debug: true, // Para logs detallados
+            logger: true
+        });
+
+        // Log para debugging (QUITAR EN PRODUCCIÓN)
+        console.log('🔍 SMTP Debug Info:', {
+            hasUser: !!process.env.SMTP_USER,
+            hasPass: !!process.env.SMTP_PASS,
+            userEmail: process.env.SMTP_USER // Solo para debug
         });
 
         // Verificar conexión SMTP

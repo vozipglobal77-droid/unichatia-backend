@@ -37,25 +37,26 @@ export default async function handler(req, res) {
             });
         }
 
-        // Configurar transporter Nodemailer para Titan Email (Configuración Oficial)
+        // Configurar transporter para Mailhostbox (Testing alternativo)
         const transporter = nodemailer.createTransport({
-            host: 'smtp0101.titan.email',
-            port: 465,
-            secure: true, // true para puerto 465 SSL/TLS
+            host: process.env.SMTP_HOST || 'smtp.mailhostbox.com', // Host Mailhostbox
+            port: parseInt(process.env.SMTP_PORT) || 587, // Puerto estándar
+            secure: false, // false para 587, true para 465
             auth: {
-                user: process.env.SMTP_USER, // Tu dirección completa de Titan
-                pass: process.env.SMTP_PASS  // Tu contraseña de Titan
+                user: process.env.SMTP_USER, // Tu email de Mailhostbox
+                pass: process.env.SMTP_PASS  // Tu contraseña de Mailhostbox
             },
-            // Configuración específica para Titan
-            connectionTimeout: 60000, // 60 segundos
-            greetingTimeout: 30000,   // 30 segundos
-            socketTimeout: 60000,     // 60 segundos
+            tls: {
+                rejectUnauthorized: false
+            },
             debug: true, // Para logs detallados
             logger: true
         });
 
         // Log para debugging (QUITAR EN PRODUCCIÓN)
         console.log('🔍 SMTP Debug Info:', {
+            host: process.env.SMTP_HOST || 'smtp.mailhostbox.com',
+            port: process.env.SMTP_PORT || '587',
             hasUser: !!process.env.SMTP_USER,
             hasPass: !!process.env.SMTP_PASS,
             userEmail: process.env.SMTP_USER // Solo para debug

@@ -37,14 +37,16 @@ export default async function handler(req, res) {
             });
         }
 
-        // Configurar transporter Nodemailer
-        const transporter = nodemailer.createTransporter({
-            service: 'gmail', // Cambiar según tu proveedor
-            auth: {
-                user: process.env.SMTP_USER,
-                pass: process.env.SMTP_PASS
-            }
-        });
+      // Configurar transporter Nodemailer con SMTP
+const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,  // ejemplo: "smtp.tu-dominio.com"
+    port: process.env.SMTP_PORT,  // ejemplo: 465 (SSL) o 587 (TLS)
+    secure: process.env.SMTP_PORT == 465, // true para 465, false para 587
+    auth: {
+        user: process.env.SMTP_USER, // tu usuario SMTP
+        pass: process.env.SMTP_PASS  // tu contraseña SMTP
+    }
+});
 
         // Verificar conexión SMTP
         await transporter.verify();

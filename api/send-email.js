@@ -38,7 +38,7 @@ export default async function handler(req, res) {
         }
 
         // Configurar transporter Nodemailer para Titan Email
-        const transporter = nodemailer.createTransporter({
+        const transporter = nodemailer.createTransport({
             host: 'smtp0101.titan.email',
             port: 465,
             secure: true, // SSL/TLS

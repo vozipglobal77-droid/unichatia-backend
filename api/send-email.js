@@ -55,7 +55,7 @@ export default async function handler(req, res) {
 
         // Log para debugging (QUITAR EN PRODUCCIÓN)
         console.log('🔍 SMTP Debug Info:', {
-            host: process.env.SMTP_HOST || 'us2.smtp.mailhostbox.com',
+            host: process.env.SMTP_HOST || 'smtp.mailhostbox.com',
             port: process.env.SMTP_PORT || '587',
             hasUser: !!process.env.SMTP_USER,
             hasPass: !!process.env.SMTP_PASS,
@@ -146,6 +146,9 @@ function generateEmailTemplate({ customerName, businessName, sector, includeInst
 
     const emoji = sectorEmojis[sector] || '🤖';
     const sectorName = sectorNames[sector] || 'Negocio';
+    
+    // Definir sanitizedBusinessName aquí
+    const sanitizedBusinessName = businessName.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
 
     return `
     <!DOCTYPE html>

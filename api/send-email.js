@@ -55,7 +55,7 @@ export default async function handler(req, res) {
 
         // Log para debugging (QUITAR EN PRODUCCIÓN)
         console.log('🔍 SMTP Debug Info:', {
-            host: process.env.SMTP_HOST || 'smtp.mailhostbox.com',
+            host: process.env.SMTP_HOST || 'us2.smtp.mailhostbox.com',
             port: process.env.SMTP_PORT || '587',
             hasUser: !!process.env.SMTP_USER,
             hasPass: !!process.env.SMTP_PASS,

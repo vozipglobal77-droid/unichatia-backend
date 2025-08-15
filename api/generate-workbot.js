@@ -1,10 +1,18 @@
 /**
  * UNICHATIA BACKEND - GENERATE WORKBOT API
  * Endpoint: POST /api/generate-workbot
- * Función serverless para Vercel
+ * Función serverless para Vercel - Versión Multi-Sector Dinámica
  */
 
-// Datos del sector gym embebidos (hasta tener base de datos)
+// =====================================================
+// DATASETS POR SECTOR - PLACEHOLDER SECTION
+// =====================================================
+
+/* 
+ * TODO: INSERTAR AQUÍ EL DATASET GYM_SECTOR_DATA COMPLETO
+ * Formato: const GYM_SECTOR_DATA = { ... };
+ */
+// [DATASET_GYM_PLACEHOLDER]
 const GYM_SECTOR_DATA = {
     "sector": "gym",
     "sectorName": "Gimnasio",
@@ -99,44 +107,99 @@ const GYM_SECTOR_DATA = {
     }
 };
 
-/**
- * Procesar FAQs reemplazando variables con datos reales
+/* 
+ * TODO: INSERTAR AQUÍ EL DATASET ECOMMERCE_SECTOR_DATA COMPLETO  
+ * Formato: const ECOMMERCE_SECTOR_DATA = { ... };
  */
-function processFaqs(formData) {
-    const faqs = [...GYM_SECTOR_DATA.faqs];
+// [DATASET_ECOMMERCE_PLACEHOLDER]
+
+/* 
+ * TODO: INSERTAR AQUÍ FUTUROS DATASETS
+ * Ejemplos: RESTAURANT_SECTOR_DATA, CLINIC_SECTOR_DATA, etc.
+ */
+// [DATASET_FUTURE_SECTORS_PLACEHOLDER]
+
+// =====================================================
+// SISTEMA DINÁMICO DE SECTORES
+// =====================================================
+
+/**
+ * Obtener datos del sector especificado
+ * @param {string} sector - Nombre del sector (gym, ecommerce, restaurant, etc.)
+ * @returns {Object} Datos del sector o null si no existe
+ */
+function getSectorData(sector) {
+    const sectorMap = {
+        'gym': typeof GYM_SECTOR_DATA !== 'undefined' ? GYM_SECTOR_DATA : null,
+        'ecommerce': typeof ECOMMERCE_SECTOR_DATA !== 'undefined' ? ECOMMERCE_SECTOR_DATA : null,
+        // 'restaurant': typeof RESTAURANT_SECTOR_DATA !== 'undefined' ? RESTAURANT_SECTOR_DATA : null,
+        // 'clinic': typeof CLINIC_SECTOR_DATA !== 'undefined' ? CLINIC_SECTOR_DATA : null,
+        // 'lawyer': typeof LAWYER_SECTOR_DATA !== 'undefined' ? LAWYER_SECTOR_DATA : null,
+        // 'dentist': typeof DENTIST_SECTOR_DATA !== 'undefined' ? DENTIST_SECTOR_DATA : null,
+    };
+
+    const sectorData = sectorMap[sector.toLowerCase()];
+    
+    if (!sectorData) {
+        console.error(`❌ Sector '${sector}' no encontrado o no configurado`);
+        return null;
+    }
+    
+    console.log(`✅ Sector data loaded for: ${sector}`);
+    return sectorData;
+}
+
+/**
+ * Procesar FAQs reemplazando variables con datos reales - VERSIÓN DINÁMICA
+ * @param {Object} formData - Datos del formulario
+ * @param {string} sector - Sector especificado
+ * @returns {Array} FAQs procesadas con variables reemplazadas
+ */
+function processFaqs(formData, sector) {
+    const sectorData = getSectorData(sector);
+    
+    if (!sectorData || !sectorData.faqs) {
+        console.error(`❌ No se encontraron FAQs para el sector: ${sector}`);
+        return [];
+    }
+    
+    const faqs = [...sectorData.faqs];
     
     return faqs.map(faq => {
         let response = faq.response;
         
-        // Reemplazar variables estándar
-        const replacements = {
-            'BUSINESS_NAME': formData.businessName || 'Nuestro gimnasio',
+        // Variables estándar (aplican a todos los sectores)
+        const standardReplacements = {
+            'BUSINESS_NAME': formData.businessName || `Nuestro ${sectorData.sectorName.toLowerCase()}`,
             'PHONE': formData.phone || '',
             'EMAIL': formData.email || '',
             'ADDRESS': formData.address || '',
             'WEBSITE': formData.website || '',
-            'WEEKDAY_HOURS': formData.weekdayHours || '6:00-24:00',
-            'WEEKEND_HOURS': formData.weekendHours || '8:00-22:00',
-            'CLASSES': formData.classes || 'Consulta nuestras clases disponibles',
-            'CLASS_SCHEDULE': formData.classSchedule || 'Horarios disponibles en recepción',
-            'FACILITIES': formData.facilities || 'Modernas instalaciones',
-            'EQUIPMENT': formData.equipment || 'Equipamiento de última generación',
-            'PRICE_RANGE': formData.priceRange || 'Consulta nuestras tarifas',
-            'SPECIAL_OFFERS': formData.specialOffers || '',
-            'PARKING_INFO': formData.parkingInfo || '',
-            'TRANSPORT': formData.transport || '',
-            'PERSONAL_TRAINING': formData.personalTraining === 'available' ? 'Ofrecemos entrenamiento personal.' : 
-                               formData.personalTraining === 'certified' ? 'Tenemos entrenadores personales certificados.' : 
-                               'Consulta disponibilidad de entrenamiento personal.',
-            'BEGINNER_PROGRAMS': formData.beginnerPrograms || 'Tenemos programas especiales para principiantes.',
-            'PAYMENT_METHODS': formData.paymentMethods || 'efectivo, tarjeta, domiciliación bancaria',
-            'CANCELLATION': formData.cancellation || 'Consulta nuestra política de cancelación'
+            'WEEKDAY_HOURS': formData.weekdayHours || '',
+            'WEEKEND_HOURS': formData.weekendHours || '',
+            'HOLIDAYS': formData.holidays || ''
+        };
+
+        // Variables específicas por sector - dinámico basado en formData
+        const sectorSpecificReplacements = {};
+        
+        // Iterar sobre todos los campos del formData para crear reemplazos dinámicos
+        Object.keys(formData).forEach(key => {
+            // Convertir camelCase a UPPER_CASE para las variables
+            const variableName = key.replace(/([A-Z])/g, '_$1').toUpperCase();
+            sectorSpecificReplacements[variableName] = formData[key];
+        });
+
+        // Combinar todos los reemplazos
+        const allReplacements = {
+            ...standardReplacements,
+            ...sectorSpecificReplacements
         };
 
         // Reemplazar todas las variables
-        Object.keys(replacements).forEach(key => {
+        Object.keys(allReplacements).forEach(key => {
             const regex = new RegExp(`{{${key}}}`, 'g');
-            response = response.replace(regex, replacements[key]);
+            response = response.replace(regex, allReplacements[key] || '');
         });
 
         // Limpiar variables no reemplazadas
@@ -150,13 +213,23 @@ function processFaqs(formData) {
 }
 
 /**
- * Generar configuración del WorkBot
+ * Generar configuración del WorkBot - VERSIÓN DINÁMICA
+ * @param {Object} formData - Datos del formulario
+ * @param {Array} processedFaqs - FAQs procesadas
+ * @param {string} sector - Sector especificado
+ * @returns {Object} Configuración completa del WorkBot
  */
-function generateWorkBotConfig(formData, processedFaqs) {
+function generateWorkBotConfig(formData, processedFaqs, sector) {
+    const sectorData = getSectorData(sector);
+    
+    if (!sectorData) {
+        throw new Error(`Sector '${sector}' no configurado`);
+    }
+
     return {
         businessName: formData.businessName,
-        sector: 'gym',
-        sectorName: 'Gimnasio',
+        sector: sector,
+        sectorName: sectorData.sectorName,
         version: '3.0',
         generated: new Date().toISOString(),
         contactInfo: {
@@ -171,34 +244,45 @@ function generateWorkBotConfig(formData, processedFaqs) {
             holidays: formData.holidays
         },
         styling: {
-            primaryColor: formData.primaryColor || GYM_SECTOR_DATA.styling.primaryColor,
-            secondaryColor: formData.secondaryColor || GYM_SECTOR_DATA.styling.secondaryColor,
-            accentColor: formData.accentColor || GYM_SECTOR_DATA.styling.accentColor,
-            fontFamily: formData.fontFamily || GYM_SECTOR_DATA.styling.fontFamily,
-            borderRadius: formData.borderRadius || parseInt(GYM_SECTOR_DATA.styling.borderRadius),
+            primaryColor: formData.primaryColor || sectorData.styling.primaryColor,
+            secondaryColor: formData.secondaryColor || sectorData.styling.secondaryColor,
+            accentColor: formData.accentColor || sectorData.styling.accentColor,
+            fontFamily: formData.fontFamily || sectorData.styling.fontFamily,
+            borderRadius: formData.borderRadius || parseInt(sectorData.styling.borderRadius),
             workbotSize: formData.workbotSize || 'medium',
             workbotPosition: formData.workbotPosition || 'bottom-right'
         },
         messages: {
             greeting: formData.greeting || `¡Hola! Soy el WorkBot de ${formData.businessName}`,
-            welcomeMessage: formData.welcomeMessage || '¿En qué puedo ayudarte? Puedes preguntarme sobre horarios, clases, precios o cualquier consulta.',
-            closingMessage: formData.closingMessage || '¡Esperamos verte pronto entrenando con nosotros!',
+            welcomeMessage: formData.welcomeMessage || `¿En qué puedo ayudarte? Puedes preguntarme sobre nuestros servicios o cualquier consulta.`,
+            closingMessage: formData.closingMessage || `¡Esperamos verte pronto!`,
             offlineMessage: formData.offlineMessage || 'Estamos cerrados ahora, pero puedes escribirnos y te responderemos pronto.'
         },
         faqs: processedFaqs,
         metadata: {
             installationService: formData.installationService || false,
             timestamp: new Date().toISOString(),
-            sector: 'gym'
+            sector: sector,
+            sectorName: sectorData.sectorName
         }
     };
 }
 
 /**
- * Generar HTML completo del WorkBot
+ * Generar HTML completo del WorkBot - VERSIÓN DINÁMICA
+ * @param {Object} config - Configuración del WorkBot
+ * @param {Object} formData - Datos del formulario
+ * @param {string} sector - Sector especificado
+ * @returns {string} HTML completo del WorkBot
  */
-function generateHTMLTemplate(config, formData) {
+function generateHTMLTemplate(config, formData, sector) {
     const timestamp = new Date().toLocaleString('es-ES');
+    const sectorData = getSectorData(sector);
+    
+    if (!sectorData) {
+        throw new Error(`Sector '${sector}' no configurado`);
+    }
+
     const sizeMap = {
         'small': '320px',
         'medium': '350px',
@@ -206,6 +290,9 @@ function generateHTMLTemplate(config, formData) {
     };
     const workbotWidth = sizeMap[config.styling.workbotSize];
 
+    // Obtener emoji dinámico del sector
+    const sectorEmoji = sectorData.icon || '🤖';
+    
     return `<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -417,7 +504,7 @@ function generateHTMLTemplate(config, formData) {
             <!-- Header -->
             <div class="workbot-header">
                 <h3>${config.businessName}</h3>
-                <p>💪 WorkBot Asistente</p>
+                <p>${sectorEmoji} WorkBot Asistente</p>
             </div>
 
             <!-- Messages Area -->
@@ -479,7 +566,7 @@ function generateHTMLTemplate(config, formData) {
                 }
             });
 
-            console.log('✅ WorkBot inicializado para ${config.businessName}');
+            console.log('✅ WorkBot inicializado para ${config.businessName} (${config.sectorName})');
         }
 
         function toggleWorkBot() {
@@ -579,6 +666,8 @@ function generateHTMLTemplate(config, formData) {
             const leadData = {
                 contactInfo: contactInfo,
                 businessName: WORKBOT_CONFIG.businessName,
+                sector: WORKBOT_CONFIG.sector,
+                sectorName: WORKBOT_CONFIG.sectorName,
                 timestamp: new Date().toISOString(),
                 context: currentContext,
                 userAgent: navigator.userAgent,
@@ -633,6 +722,7 @@ function generateHTMLTemplate(config, formData) {
                 gtag('event', eventName, {
                     business_name: WORKBOT_CONFIG.businessName,
                     sector: WORKBOT_CONFIG.sector,
+                    sector_name: WORKBOT_CONFIG.sectorName,
                     ...data
                 });
             }
@@ -660,7 +750,7 @@ function generateHTMLTemplate(config, formData) {
     <!-- Unichatia Signature Comment -->
     <!-- Unichatia WorkBot v${config.version} -->
     <!-- Generated: ${timestamp} -->
-    <!-- Sector: ${config.sector} -->
+    <!-- Sector: ${config.sector} (${config.sectorName}) -->
     <!-- Business: ${config.businessName} -->
     <!-- Visit unichatia.com for updates -->
 
@@ -669,13 +759,22 @@ function generateHTMLTemplate(config, formData) {
 }
 
 /**
- * Validar datos del formulario
+ * Validar datos del formulario - VERSIÓN DINÁMICA
+ * @param {Object} formData - Datos del formulario
+ * @param {string} sector - Sector especificado
+ * @returns {Array} Array de errores (vacío si todo OK)
  */
-function validateFormData(formData) {
+function validateFormData(formData, sector) {
     const errors = [];
+    const sectorData = getSectorData(sector);
+    
+    if (!sectorData) {
+        errors.push(`Sector '${sector}' no es válido o no está configurado`);
+        return errors;
+    }
     
     if (!formData.businessName || formData.businessName.trim().length < 2) {
-        errors.push('Nombre del gimnasio es obligatorio');
+        errors.push(`Nombre del ${sectorData.sectorName.toLowerCase()} es obligatorio`);
     }
     
     if (!formData.phone || formData.phone.trim().length < 9) {
@@ -691,7 +790,7 @@ function validateFormData(formData) {
 
 /**
  * FUNCIÓN PRINCIPAL - Endpoint serverless
- * *** CORREGIDO A COMMONJS ***
+ * *** VERSIÓN MULTI-SECTOR DINÁMICA ***
  */
 module.exports = async (req, res) => {
     // Configurar CORS
@@ -717,9 +816,22 @@ module.exports = async (req, res) => {
         console.log('📋 Data:', req.body);
         
         const formData = req.body;
+        const sector = formData.sector || 'gym'; // Default a gym si no se especifica
+        
+        console.log(`🎯 Processing sector: ${sector}`);
+        
+        // Validar que el sector existe
+        const sectorData = getSectorData(sector);
+        if (!sectorData) {
+            return res.status(400).json({
+                success: false,
+                error: `Sector '${sector}' no está disponible`,
+                availableSectors: ['gym', 'ecommerce'] // Lista dinámica basada en sectores configurados
+            });
+        }
         
         // Validar datos
-        const validationErrors = validateFormData(formData);
+        const validationErrors = validateFormData(formData, sector);
         if (validationErrors.length > 0) {
             return res.status(400).json({
                 success: false,
@@ -728,21 +840,23 @@ module.exports = async (req, res) => {
             });
         }
         
-        // Procesar FAQs
-        const processedFaqs = processFaqs(formData);
+        // Procesar FAQs dinámicamente
+        const processedFaqs = processFaqs(formData, sector);
         
         // Generar configuración
-        const workbotConfig = generateWorkBotConfig(formData, processedFaqs);
+        const workbotConfig = generateWorkBotConfig(formData, processedFaqs, sector);
         
         // Generar HTML completo
-        const workbotHTML = generateHTMLTemplate(workbotConfig, formData);
+        const workbotHTML = generateHTMLTemplate(workbotConfig, formData, sector);
         
         // Generar nombre de archivo
         const filename = `${formData.businessName.replace(/\s+/g, '-').toLowerCase()}-workbot.html`;
         
         console.log('✅ WorkBot generated successfully');
         console.log(`📄 Filename: ${filename}`);
-        console.log(`📏 HTML size: ${workbotHTML.length} characters`);
+        console.log(`🎯 Sector: ${sector} (${sectorData.sectorName})`);
+        console.log(`📊 FAQs: ${processedFaqs.length}`);
+        console.log(`📝 HTML size: ${workbotHTML.length} characters`);
         
         // Respuesta con HTML generado
         return res.status(200).json({
@@ -752,12 +866,14 @@ module.exports = async (req, res) => {
                 html: workbotHTML,
                 filename: filename,
                 businessName: formData.businessName,
-                sector: 'gym',
+                sector: sector,
+                sectorName: sectorData.sectorName,
                 timestamp: new Date().toISOString(),
                 metadata: {
                     faqsCount: processedFaqs.length,
                     installationService: formData.installationService || false,
-                    version: '3.0'
+                    version: '3.0',
+                    features: sectorData.features || []
                 }
             }
         });

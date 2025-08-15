@@ -1,7 +1,8 @@
 // api/create-payment-intent.js
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
-export default async function handler(req, res) {
+// ✅ CAMBIO: module.exports en lugar de export default
+module.exports = async function handler(req, res) {
     // Configurar CORS
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -130,4 +131,4 @@ export default async function handler(req, res) {
             details: process.env.NODE_ENV === 'development' ? error.message : undefined
         });
     }
-}
+};

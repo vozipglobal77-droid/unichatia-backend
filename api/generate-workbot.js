@@ -112,7 +112,568 @@ const GYM_SECTOR_DATA = {
  * Formato: const ECOMMERCE_SECTOR_DATA = { ... };
  */
 // [DATASET_ECOMMERCE_PLACEHOLDER]
+const ECOMMERCE_SECTOR_DATA = {
+    "sector": "ecommerce",
+    "sectorName": "Tienda Online",
+    "description": "WorkBot especializado para tiendas online, e-commerce y venta por internet",
+    "icon": "🛒",
+    "features": [
+        "Gestión de envíos y entregas",
+        "Información de stock y productos", 
+        "Devoluciones y cambios automáticos",
+        "Soporte de pagos y facturación",
+        "Atención al cliente 24/7"
+    ],
+    "faqs": [
+        // ===== ENVÍOS Y LOGÍSTICA (Priority 1) =====
+        {
+            "id": "envios_tiempos_1",
+            "keywords": ["envio", "envío", "entrega", "cuando llega", "cuándo llega", "tiempo", "plazo"],
+            "response": "Los envíos tardan {{SHIPPING_TIME}} desde que procesas tu pedido. Envío gratuito en pedidos superiores a {{FREE_SHIPPING_MINIMUM}}. {{SHIPPING_ZONES}}",
+            "category": "envios",
+            "priority": 1
+        },
+        {
+            "id": "envios_costes_1",
+            "keywords": ["coste envio", "coste envío", "precio envio", "gastos envío", "cuanto cuesta"],
+            "response": "Gastos de envío: {{SHIPPING_COSTS}}. ¡Envío GRATIS en pedidos superiores a {{FREE_SHIPPING_MINIMUM}}! {{SHIPPING_ZONES}}",
+            "category": "envios",
+            "priority": 1
+        },
+        {
+            "id": "envios_seguimiento_1",
+            "keywords": ["seguimiento", "tracking", "rastrear", "localizar pedido", "donde esta"],
+            "response": "Recibirás un email con el número de seguimiento cuando enviemos tu pedido. También puedes consultarlo en {{WEBSITE}}/mi-cuenta o contactarnos al {{EMAIL}}.",
+            "category": "envios",
+            "priority": 1
+        },
+        {
+            "id": "envios_zonas_1",
+            "keywords": ["envio internacional", "envío internacional", "paises", "países", "europa", "mundial"],
+            "response": "Enviamos a: {{SHIPPING_ZONES}}. Los plazos internacionales son {{INTERNATIONAL_SHIPPING_TIME}}. Consulta tarifas en el checkout.",
+            "category": "envios",
+            "priority": 2
+        },
+        {
+            "id": "envios_urgente_1",
+            "keywords": ["envio urgente", "envío urgente", "express", "rapido", "rápido", "24h", "hoy"],
+            "response": "{{EXPRESS_SHIPPING}} Para pedidos urgentes, contacta al {{PHONE}} antes de las {{CUTOFF_TIME}} y te ayudamos.",
+            "category": "envios",
+            "priority": 2
+        },
+        {
+            "id": "envios_direccion_1",
+            "keywords": ["cambiar direccion", "cambiar dirección", "direccion incorrecta", "dirección incorrecta"],
+            "response": "Si necesitas cambiar la dirección, contacta INMEDIATAMENTE al {{EMAIL}} o {{PHONE}}. Solo podemos modificarla antes del envío.",
+            "category": "envios",
+            "priority": 2
+        },
+        {
+            "id": "envios_no_llega_1",
+            "keywords": ["no llega", "no ha llegado", "perdido", "extraviado", "donde esta mi pedido"],
+            "response": "Si tu pedido no llega en {{SHIPPING_TIME}}, contacta al {{EMAIL}} con tu número de pedido. Gestionamos la incidencia con la empresa de transporte.",
+            "category": "envios",
+            "priority": 1
+        },
+        {
+            "id": "envios_dañado_1",
+            "keywords": ["paquete dañado", "producto roto", "llegó roto", "llegó dañado", "mal estado"],
+            "response": "Si recibes el producto dañado, NO lo devuelvas. Haz fotos y contacta al {{EMAIL}} en 48h. Te enviamos reposición gratuita.",
+            "category": "envios",
+            "priority": 1
+        },
 
+        // ===== DEVOLUCIONES Y CAMBIOS (Priority 1) =====
+        {
+            "id": "devoluciones_como_1",
+            "keywords": ["devolver", "devolución", "devolucion", "como devolver", "cómo devolver"],
+            "response": "Tienes {{RETURN_PERIOD}} días para devolver. Entra en {{WEBSITE}}/devoluciones, indica motivo y te generamos etiqueta prepagada. {{RETURN_CONDITIONS}}",
+            "category": "devoluciones",
+            "priority": 1
+        },
+        {
+            "id": "devoluciones_coste_1",
+            "keywords": ["coste devolucion", "coste devolución", "quien paga", "gratis devolver"],
+            "response": "{{RETURN_COSTS}} Si el producto tiene defecto o error nuestro, la devolución es gratuita.",
+            "category": "devoluciones",
+            "priority": 1
+        },
+        {
+            "id": "devoluciones_tiempo_1",
+            "keywords": ["cuanto tardan", "plazo devolucion", "plazo devolución", "cuando cobro"],
+            "response": "Procesamos devoluciones en {{RETURN_PROCESSING_TIME}} desde que recibimos el producto. El reembolso tarda {{REFUND_TIME}} adicionales.",
+            "category": "devoluciones",
+            "priority": 1
+        },
+        {
+            "id": "cambios_talla_1",
+            "keywords": ["cambiar talla", "talla incorrecta", "no me queda", "cambio", "intercambio"],
+            "response": "{{EXCHANGE_POLICY}} Para cambios rápidos, contacta al {{EMAIL}} o inicia devolución en {{WEBSITE}}/devoluciones.",
+            "category": "devoluciones",
+            "priority": 1
+        },
+        {
+            "id": "devoluciones_condiciones_1",
+            "keywords": ["condiciones devolucion", "que se puede devolver", "etiquetas", "usado"],
+            "response": "Puedes devolver productos sin usar, con etiquetas originales. {{RETURN_CONDITIONS}} No se aceptan: {{NON_RETURNABLE_ITEMS}}",
+            "category": "devoluciones",
+            "priority": 2
+        },
+        {
+            "id": "desistimiento_1",
+            "keywords": ["desistimiento", "derecho desistimiento", "14 dias", "cancelar compra"],
+            "response": "Tienes 14 días naturales para desistir sin dar explicaciones (Ley de Consumidores). Contacta al {{EMAIL}} para ejercer este derecho.",
+            "category": "devoluciones",
+            "priority": 2
+        },
+
+        // ===== PAGOS Y FACTURACIÓN (Priority 1) =====
+        {
+            "id": "metodos_pago_1",
+            "keywords": ["formas de pago", "metodos pago", "métodos pago", "como pagar", "cómo pagar"],
+            "response": "Aceptamos: {{PAYMENT_METHODS}}. Todos los pagos son 100% seguros con encriptación SSL.",
+            "category": "pagos",
+            "priority": 1
+        },
+        {
+            "id": "pago_seguro_1",
+            "keywords": ["pago seguro", "seguridad", "ssl", "datos tarjeta", "proteccion"],
+            "response": "Sí, es 100% seguro. Usamos encriptación SSL y nunca almacenamos datos de tarjetas. {{SECURITY_CERTIFICATIONS}}",
+            "category": "pagos",
+            "priority": 1
+        },
+        {
+            "id": "factura_1",
+            "keywords": ["factura", "recibo", "justificante", "comprobante"],
+            "response": "Recibes la factura por email tras la compra. También disponible en {{WEBSITE}}/mi-cuenta. Para facturas con IVA empresas, contacta {{EMAIL}}.",
+            "category": "pagos",
+            "priority": 2
+        },
+        {
+            "id": "precios_iva_1",
+            "keywords": ["precios", "iva", "impuestos", "precio final", "con iva"],
+            "response": "Todos los precios mostrados incluyen IVA ({{VAT_RATE}}%). El precio que ves es el precio final sin sorpresas.",
+            "category": "pagos",
+            "priority": 2
+        },
+        {
+            "id": "descuentos_cupones_1",
+            "keywords": ["descuento", "cupon", "cupón", "codigo descuento", "oferta", "promocion"],
+            "response": "{{CURRENT_OFFERS}} Introduce el código en el checkout. Síguenos en redes para ofertas exclusivas: {{SOCIAL_MEDIA}}",
+            "category": "pagos",
+            "priority": 2
+        },
+        {
+            "id": "reembolso_1",
+            "keywords": ["reembolso", "devolucion dinero", "devolución dinero", "cuando cobro"],
+            "response": "Los reembolsos tardan {{REFUND_TIME}} en aparecer en tu cuenta, tras procesar la devolución. Depende de tu banco.",
+            "category": "pagos",
+            "priority": 1
+        },
+
+        // ===== STOCK Y DISPONIBILIDAD (Priority 1) =====
+        {
+            "id": "stock_disponible_1",
+            "keywords": ["stock", "disponible", "hay", "quedan", "agotado"],
+            "response": "Si está disponible aparece el botón 'Añadir al carrito'. Si está agotado, puedes activar 'Avísame cuando esté disponible' y te notificamos.",
+            "category": "stock",
+            "priority": 1
+        },
+        {
+            "id": "reposicion_stock_1",
+            "keywords": ["cuando reponen", "reposicion", "reposición", "vuelve stock", "avísame"],
+            "response": "{{RESTOCKING_POLICY}} Activa las notificaciones en el producto y serás el primero en saberlo.",
+            "category": "stock",
+            "priority": 2
+        },
+        {
+            "id": "reserva_producto_1",
+            "keywords": ["reservar", "apartar", "guardar producto"],
+            "response": "{{RESERVATION_POLICY}} Añádelo al carrito para reservarlo temporalmente mientras compras.",
+            "category": "stock",
+            "priority": 3
+        },
+        {
+            "id": "stock_tienda_fisica_1",
+            "keywords": ["tienda fisica", "tienda física", "local", "en tienda"],
+            "response": "{{PHYSICAL_STORES}} Para consultar stock en tienda, llama a {{PHONE}} con la referencia del producto.",
+            "category": "stock",
+            "priority": 3
+        },
+
+        // ===== PRODUCTOS Y TALLAS (Priority 2) =====
+        {
+            "id": "guia_tallas_1",
+            "keywords": ["tallas", "guia tallas", "guía tallas", "que talla", "medidas"],
+            "response": "Consulta nuestra guía de tallas en cada producto o en {{WEBSITE}}/guia-tallas. {{SIZE_GUIDE_TIPS}}",
+            "category": "productos",
+            "priority": 2
+        },
+        {
+            "id": "producto_info_1",
+            "keywords": ["caracteristicas", "características", "especificaciones", "detalles", "informacion"],
+            "response": "Todas las especificaciones están en la ficha del producto. Para dudas específicas, contacta {{EMAIL}} con la referencia.",
+            "category": "productos",
+            "priority": 2
+        },
+        {
+            "id": "cuidado_productos_1",
+            "keywords": ["cuidado", "lavar", "mantenimiento", "instrucciones", "etiqueta"],
+            "response": "Las instrucciones de cuidado aparecen en la ficha del producto y en la etiqueta. {{CARE_INSTRUCTIONS}}",
+            "category": "productos",
+            "priority": 3
+        },
+        {
+            "id": "garantia_productos_1",
+            "keywords": ["garantia", "garantía", "defecto", "roto", "no funciona"],
+            "response": "Todos los productos tienen {{WARRANTY_PERIOD}} de garantía legal. Para defectos, contacta {{EMAIL}} con fotos y número de pedido.",
+            "category": "productos",
+            "priority": 2
+        },
+        {
+            "id": "productos_personalizados_1",
+            "keywords": ["personalizar", "grabado", "bordado", "personalizado"],
+            "response": "{{PERSONALIZATION_SERVICES}} Los productos personalizados no admiten devolución salvo defecto de fabricación.",
+            "category": "productos",
+            "priority": 3
+        },
+
+        // ===== CUENTA Y REGISTRO (Priority 2) =====
+        {
+            "id": "crear_cuenta_1",
+            "keywords": ["crear cuenta", "registrarse", "registro", "usuario", "alta"],
+            "response": "Es fácil: ve a {{WEBSITE}}/registro, completa tus datos y ¡listo! {{ACCOUNT_BENEFITS}}",
+            "category": "cuenta",
+            "priority": 2
+        },
+        {
+            "id": "login_problemas_1",
+            "keywords": ["no puedo entrar", "login", "contraseña", "password", "olvidé"],
+            "response": "Si olvidaste tu contraseña, usa 'Recuperar contraseña' en {{WEBSITE}}/login. Si persiste, contacta {{EMAIL}}.",
+            "category": "cuenta",
+            "priority": 2
+        },
+        {
+            "id": "compra_sin_registro_1",
+            "keywords": ["sin registro", "compra invitado", "guest", "no quiero cuenta"],
+            "response": "{{GUEST_CHECKOUT}} Te recomendamos crear cuenta para tracking de pedidos y futuras compras más rápidas.",
+            "category": "cuenta",
+            "priority": 3
+        },
+        {
+            "id": "datos_personales_1",
+            "keywords": ["cambiar datos", "actualizar datos", "direccion", "dirección", "teléfono"],
+            "response": "Modifica tus datos en {{WEBSITE}}/mi-cuenta o contacta {{EMAIL}}. Según GDPR, tienes derecho a rectificar tus datos.",
+            "category": "cuenta",
+            "priority": 2
+        },
+
+        // ===== CONTACTO Y ATENCIÓN (Priority 1) =====
+        {
+            "id": "contacto_1",
+            "keywords": ["contacto", "telefono", "teléfono", "email", "hablar"],
+            "response": "Contáctanos por: Email {{EMAIL}}, Teléfono {{PHONE}} ({{SUPPORT_HOURS}}) o chat en vivo en nuestra web.",
+            "category": "contacto",
+            "priority": 1
+        },
+        {
+            "id": "horarios_atencion_1",
+            "keywords": ["horarios atencion", "horarios atención", "cuando atienden", "disponible"],
+            "response": "Nuestro horario de atención: {{SUPPORT_HOURS}}. El chat y email están disponibles 24/7 con respuesta en {{RESPONSE_TIME}}.",
+            "category": "contacto",
+            "priority": 1
+        },
+        {
+            "id": "tiempo_respuesta_1",
+            "keywords": ["cuanto tardan", "tiempo respuesta", "cuando contestan"],
+            "response": "Respondemos emails en {{RESPONSE_TIME}} máximo. Para urgencias, llama al {{PHONE}} en {{SUPPORT_HOURS}}.",
+            "category": "contacto",
+            "priority": 2
+        },
+
+        // ===== LEGAL Y PRIVACIDAD (Priority 2) =====
+        {
+            "id": "cookies_1",
+            "keywords": ["cookies", "privacidad", "datos", "gdpr", "rgpd"],
+            "response": "Usamos cookies para mejorar tu experiencia. Puedes configurarlas en nuestra política de cookies: {{WEBSITE}}/cookies",
+            "category": "legal",
+            "priority": 2
+        },
+        {
+            "id": "datos_personales_gdpr_1",
+            "keywords": ["mis datos", "borrar datos", "gdpr", "proteccion datos"],
+            "response": "Tus datos están seguros según GDPR. Puedes ejercer tus derechos (acceso, rectificación, supresión) contactando {{EMAIL}}.",
+            "category": "legal",
+            "priority": 2
+        },
+        {
+            "id": "aviso_legal_1",
+            "keywords": ["aviso legal", "condiciones", "terminos", "términos", "legal"],
+            "response": "Consulta nuestro aviso legal y condiciones en {{WEBSITE}}/legal. Para dudas legales, contacta {{EMAIL}}.",
+            "category": "legal",
+            "priority": 3
+        },
+
+        // ===== PROBLEMAS TÉCNICOS (Priority 2) =====
+        {
+            "id": "problema_web_1",
+            "keywords": ["no funciona", "error", "problema web", "no carga", "lento"],
+            "response": "Si la web no funciona: 1) Actualiza la página 2) Borra caché 3) Prueba otro navegador. Si persiste, contacta {{EMAIL}}.",
+            "category": "tecnico",
+            "priority": 2
+        },
+        {
+            "id": "carrito_problemas_1",
+            "keywords": ["carrito", "no añade", "no funciona carrito", "no puedo comprar"],
+            "response": "Si tienes problemas con el carrito: 1) Acepta cookies 2) Desactiva bloqueadores 3) Usa otro navegador. Ayuda: {{EMAIL}}",
+            "category": "tecnico",
+            "priority": 2
+        },
+        {
+            "id": "pago_falla_1",
+            "keywords": ["pago no funciona", "tarjeta rechazada", "error pago", "no puedo pagar"],
+            "response": "Si el pago falla: 1) Verifica datos tarjeta 2) Comprueba límites 3) Contacta tu banco 4) Prueba otro método. Ayuda: {{PHONE}}",
+            "category": "tecnico",
+            "priority": 1
+        },
+
+        // ===== FAQs ESPECÍFICAS E-COMMERCE AVANZADAS =====
+        {
+            "id": "productos_digitales_1",
+            "keywords": ["producto digital", "descarga", "software", "ebook", "digital"],
+            "response": "{{DIGITAL_PRODUCTS}} Recibes el enlace de descarga por email tras el pago. No aplica derecho de desistimiento para productos digitales.",
+            "category": "productos",
+            "priority": 3
+        },
+        {
+            "id": "lista_deseos_1",
+            "keywords": ["lista deseos", "favoritos", "wishlist", "guardar"],
+            "response": "Crea tu lista de deseos en {{WEBSITE}}/mi-cuenta. Añade productos con el ❤️ y recibe notificaciones de ofertas.",
+            "category": "cuenta",
+            "priority": 3
+        },
+        {
+            "id": "programa_fidelidad_1",
+            "keywords": ["puntos", "fidelidad", "loyalty", "descuentos cliente"],
+            "response": "{{LOYALTY_PROGRAM}} Gana puntos con cada compra y canjéalos por descuentos exclusivos.",
+            "category": "promociones",
+            "priority": 3
+        },
+        {
+            "id": "envio_regalo_1",
+            "keywords": ["regalo", "envoltorio", "tarjeta regalo", "envio regalo"],
+            "response": "{{GIFT_SERVICES}} Selecciona 'Es un regalo' en el checkout y añadimos envoltorio especial y tarjeta personalizada.",
+            "category": "envios",
+            "priority": 3
+        },
+        {
+            "id": "comparar_productos_1",
+            "keywords": ["comparar", "diferencias", "cual elegir", "comparativa"],
+            "response": "Usa nuestro comparador en {{WEBSITE}}/comparar o contacta {{EMAIL}} para asesoramiento personalizado gratuito.",
+            "category": "productos",
+            "priority": 3
+        },
+        {
+            "id": "newsletter_1",
+            "keywords": ["newsletter", "boletin", "boletín", "noticias", "ofertas email"],
+            "response": "Suscríbete en {{WEBSITE}}/newsletter para ofertas exclusivas y novedades. Cancelable en cualquier momento.",
+            "category": "marketing",
+            "priority": 3
+        },
+        {
+            "id": "precios_competencia_1",
+            "keywords": ["precio mas barato", "precio más barato", "igualamos precio", "mejor precio"],
+            "response": "{{PRICE_MATCHING}} Si encuentras el mismo producto más barato, contacta {{EMAIL}} con el enlace y estudiamos igualarlo.",
+            "category": "pagos",
+            "priority": 3
+        },
+        {
+            "id": "envio_empresas_1",
+            "keywords": ["envio empresas", "envío empresas", "factura empresa", "pedido empresa"],
+            "response": "Para pedidos empresariales contacta {{BUSINESS_EMAIL}} o {{PHONE}}. Ofrecemos condiciones especiales y facturación personalizada.",
+            "category": "envios",
+            "priority": 3
+        },
+        {
+            "id": "productos_segunda_mano_1",
+            "keywords": ["segunda mano", "outlet", "liquidacion", "liquidación", "descatalogado"],
+            "response": "{{OUTLET_INFO}} Consulta nuestra sección outlet en {{WEBSITE}}/outlet para productos con descuentos especiales.",
+            "category": "productos",
+            "priority": 3
+        },
+        {
+            "id": "afiliados_1",
+            "keywords": ["afiliados", "colaborar", "comision", "comisión", "partner"],
+            "response": "{{AFFILIATE_PROGRAM}} Únete a nuestro programa de afiliados en {{WEBSITE}}/afiliados y gana comisiones por ventas.",
+            "category": "colaboracion",
+            "priority": 4
+        },
+
+        // ===== HORARIOS Y UBICACIÓN =====
+        {
+            "id": "horarios_1",
+            "keywords": ["horarios", "horario", "abierto", "cerrado", "cuando", "cuándo"],
+            "response": "Nuestra tienda online está disponible 24/7. Atención al cliente: {{SUPPORT_HOURS}}. {{PHYSICAL_STORE_HOURS}}",
+            "category": "horarios",
+            "priority": 1
+        },
+        {
+            "id": "ubicacion_1",
+            "keywords": ["donde", "dónde", "ubicacion", "ubicación", "dirección", "como llegar"],
+            "response": "{{PHYSICAL_STORES}} Tienda online: {{WEBSITE}}. Para dudas: {{EMAIL}} o {{PHONE}}",
+            "category": "ubicacion",
+            "priority": 2
+        }
+    ],
+    "styling": {
+        "primaryColor": "#3b82f6",
+        "secondaryColor": "#1d4ed8", 
+        "accentColor": "#fbbf24",
+        "fontFamily": "'Inter', sans-serif",
+        "borderRadius": "8px",
+        "sectorTheme": "modern"
+    },
+    "customFields": [
+        {
+            "id": "shippingTime",
+            "label": "Tiempo de envío estándar",
+            "type": "text",
+            "placeholder": "Ej: 24-48h, 2-3 días laborables"
+        },
+        {
+            "id": "freeShippingMinimum",
+            "label": "Pedido mínimo envío gratis",
+            "type": "text",
+            "placeholder": "Ej: 50€, 75€"
+        },
+        {
+            "id": "shippingCosts",
+            "label": "Costes de envío",
+            "type": "text",
+            "placeholder": "Ej: 4.95€ península, 9.95€ Baleares"
+        },
+        {
+            "id": "shippingZones",
+            "label": "Zonas de envío",
+            "type": "text",
+            "placeholder": "Ej: España, Europa, Mundial"
+        },
+        {
+            "id": "returnPeriod",
+            "label": "Período de devolución",
+            "type": "text",
+            "placeholder": "Ej: 14 días, 30 días"
+        },
+        {
+            "id": "returnCosts",
+            "label": "Política costes devolución",
+            "type": "text",
+            "placeholder": "Ej: Devoluciones gratuitas, Cliente paga 3.95€"
+        },
+        {
+            "id": "paymentMethods",
+            "label": "Métodos de pago",
+            "type": "text",
+            "placeholder": "Ej: Tarjeta, PayPal, Bizum, Transferencia"
+        },
+        {
+            "id": "supportHours",
+            "label": "Horarios atención cliente",
+            "type": "text",
+            "placeholder": "Ej: L-V 9:00-18:00, S 10:00-14:00"
+        },
+        {
+            "id": "responseTime",
+            "label": "Tiempo respuesta emails",
+            "type": "text",
+            "placeholder": "Ej: 24h máximo, mismo día laborable"
+        },
+        {
+            "id": "warrantyPeriod",
+            "label": "Período garantía",
+            "type": "text",
+            "placeholder": "Ej: 2 años garantía legal, 1 año comercial"
+        },
+        {
+            "id": "stockPolicy",
+            "label": "Política de stock",
+            "type": "text",
+            "placeholder": "Ej: Stock en tiempo real, Reposición semanal"
+        },
+        {
+            "id": "specialOffers",
+            "label": "Ofertas actuales",
+            "type": "textarea",
+            "placeholder": "Ej: -20% primera compra con BIENVENIDO20, Envío gratis Black Friday"
+        }
+    ]
+};
+
+// Función auxiliar para procesar FAQs específicas de e-commerce
+function processEcommerceFaqs(formData) {
+    const faqs = [...ECOMMERCE_SECTOR_DATA.faqs];
+    
+    return faqs.map(faq => {
+        let response = faq.response;
+        
+        // Variables específicas de e-commerce
+        const ecommerceReplacements = {
+            'BUSINESS_NAME': formData.businessName || 'Nuestra tienda',
+            'PHONE': formData.phone || '',
+            'EMAIL': formData.email || '',
+            'WEBSITE': formData.website || '',
+            'SHIPPING_TIME': formData.shippingTime || '2-3 días laborables',
+            'FREE_SHIPPING_MINIMUM': formData.freeShippingMinimum || '50€',
+            'SHIPPING_COSTS': formData.shippingCosts || '4.95€ península',
+            'SHIPPING_ZONES': formData.shippingZones || 'España península y Baleares',
+            'INTERNATIONAL_SHIPPING_TIME': formData.internationalShippingTime || '5-7 días laborables',
+            'EXPRESS_SHIPPING': formData.expressShipping || 'Disponible envío 24h por 9.95€',
+            'CUTOFF_TIME': formData.cutoffTime || '14:00h',
+            'RETURN_PERIOD': formData.returnPeriod || '30 días',
+            'RETURN_COSTS': formData.returnCosts || 'Devoluciones gratuitas',
+            'RETURN_PROCESSING_TIME': formData.returnProcessingTime || '3-5 días laborables',
+            'REFUND_TIME': formData.refundTime || '5-7 días laborables',
+            'EXCHANGE_POLICY': formData.exchangePolicy || 'Cambios gratuitos',
+            'RETURN_CONDITIONS': formData.returnConditions || 'Producto sin usar con etiquetas',
+            'NON_RETURNABLE_ITEMS': formData.nonReturnableItems || 'productos personalizados e higiene personal',
+            'PAYMENT_METHODS': formData.paymentMethods || 'Tarjeta, PayPal, Bizum, Transferencia',
+            'SECURITY_CERTIFICATIONS': formData.securityCertifications || 'Certificado SSL y Verified by Visa',
+            'VAT_RATE': formData.vatRate || '21',
+            'CURRENT_OFFERS': formData.specialOffers || '¡Envío gratis en pedidos +50€!',
+            'SOCIAL_MEDIA': formData.socialMedia || '@nuestratienda',
+            'SUPPORT_HOURS': formData.supportHours || 'L-V 9:00-18:00',
+            'RESPONSE_TIME': formData.responseTime || '24h máximo',
+            'RESTOCKING_POLICY': formData.restockPolicy || 'Reponemos productos populares semanalmente',
+            'RESERVATION_POLICY': formData.reservationPolicy || 'No reservamos productos, stock limitado',
+            'PHYSICAL_STORES': formData.physicalStores || 'Solo tienda online',
+            'SIZE_GUIDE_TIPS': formData.sizeGuideTips || 'Si dudas entre tallas, elige la mayor',
+            'CARE_INSTRUCTIONS': formData.careInstructions || 'Sigue las instrucciones de la etiqueta',
+            'WARRANTY_PERIOD': formData.warrantyPeriod || '2 años garantía legal',
+            'PERSONALIZATION_SERVICES': formData.personalizationServices || 'Servicio de personalización disponible',
+            'ACCOUNT_BENEFITS': formData.accountBenefits || 'Envíos más rápidos y tracking de pedidos',
+            'GUEST_CHECKOUT': formData.guestCheckout || 'Puedes comprar sin registro',
+            'DIGITAL_PRODUCTS': formData.digitalProducts || 'Productos digitales disponibles',
+            'LOYALTY_PROGRAM': formData.loyaltyProgram || 'Programa de puntos disponible',
+            'GIFT_SERVICES': formData.giftServices || 'Servicio de regalo disponible',
+            'PRICE_MATCHING': formData.priceMatching || 'Igualamos precios de la competencia',
+            'BUSINESS_EMAIL': formData.businessEmail || formData.email || '',
+            'OUTLET_INFO': formData.outletInfo || 'Sección outlet con ofertas especiales',
+            'AFFILIATE_PROGRAM': formData.affiliateProgram || 'Programa de afiliados disponible',
+            'PHYSICAL_STORE_HOURS': formData.physicalStoreHours || ''
+        };
+        
+        // Aplicar reemplazos
+        Object.keys(ecommerceReplacements).forEach(key => {
+            const placeholder = `{{${key}}}`;
+            response = response.replace(new RegExp(placeholder, 'g'), ecommerceReplacements[key]);
+        });
+        
+        return {
+            ...faq,
+            response: response
+        };
+    });
+}
 /* 
  * TODO: INSERTAR AQUÍ FUTUROS DATASETS
  * Ejemplos: RESTAURANT_SECTOR_DATA, CLINIC_SECTOR_DATA, etc.

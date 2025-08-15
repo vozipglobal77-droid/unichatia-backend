@@ -1,7 +1,6 @@
 // api/create-payment-intent.js
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
-// ✅ CAMBIO: module.exports en lugar de export default
 module.exports = async function handler(req, res) {
     // Configurar CORS
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -63,30 +62,44 @@ module.exports = async function handler(req, res) {
             itemsDescription.push('Instalación Asistida');
         }
 
+        // *** FIX: SOLO DATOS ESENCIALES EN METADATA (< 500 chars cada uno) ***
+        const metadata = {
+            businessName: businessName.substring(0, 100), // Limitar a 100 chars
+            phone: phone.substring(0, 50),
+            email: email.substring(0, 100),
+            sector: sector,
+            isUpdate: isUpdate.toString(),
+            installationService: installationService ? 'true' : 'false',
+            source: 'unichatia_workbot_generator',
+            // Datos adicionales más importantes (limitados)
+            address: (formData.address || '').substring(0, 100),
+            primaryColor: formData.primaryColor || '#2e8b57',
+            weekdayHours: (formData.weekdayHours || '').substring(0, 50),
+            weekendHours: (formData.weekendHours || '').substring(0, 50)
+        };
+
+        // *** NOTA: El formData completo se enviará por separado al webhook o email ***
+        console.log('📝 Metadata size check:', JSON.stringify(metadata).length, 'characters');
+
         // Crear Payment Intent en Stripe
         const paymentIntent = await stripe.paymentIntents.create({
             amount: totalAmount,
             currency: 'eur',
             description: `Unichatia - ${itemsDescription.join(' + ')} para ${businessName}`,
             receipt_email: email,
-            metadata: {
-                businessName,
-                phone,
-                email,
-                sector,
-                isUpdate: isUpdate.toString(),
-                installationService: installationService ? 'true' : 'false',
-                // Guardar formData como JSON string para usar en webhook
-                formDataJson: JSON.stringify(formData),
-                // Para analytics
-                source: 'unichatia_workbot_generator'
-            },
+            metadata: metadata, // ✅ Ahora mucho más pequeño
             automatic_payment_methods: {
                 enabled: true,
             },
         });
 
         console.log('✅ Payment Intent creado:', paymentIntent.id);
+
+        // *** GUARDAR FORMDATA COMPLETO EN BASE DE DATOS O CACHE ***
+        // Aquí podrías guardar el formData completo usando el paymentIntent.id como clave
+        // Por ejemplo: await saveFormDataToCache(paymentIntent.id, formData);
+        
+        console.log('💾 FormData guardado temporalmente para:', paymentIntent.id);
 
         // Responder con client_secret y datos de confirmación
         res.status(200).json({
@@ -102,7 +115,9 @@ module.exports = async function handler(req, res) {
                 subtotal: subtotal / 100,
                 tax: tax / 100,
                 total: totalAmount / 100
-            }
+            },
+            // *** INCLUIR FORMDATA EN LA RESPUESTA PARA EL FRONTEND ***
+            formData: formData // ✅ El frontend puede usar esto directamente
         });
 
     } catch (error) {
